@@ -15,7 +15,7 @@ RM		= rm -f
 CC		= gcc
 CCFLAGS	= -Wextra -Werror -Wall
 NAME	= minitalk.a
-SRC		= cient.c server.c
+SRC		= client.c server.c
 
 OBJ = $(SRC:.c=.o)
 INCLUDE = minitalk.h

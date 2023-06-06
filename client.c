@@ -51,9 +51,15 @@ void	char_to_bin(int pid, char c)
 	while (i < 8)
 	{
 		if (c & (0x01 << i))
+		{
             kill(pid, SIGUSR1);
+			printf("SIGUSR1: %d\n", SIGUSR1);
+		}
         else
+		{
 			kill(pid, SIGUSR2);
+			printf("SIGUSR2: %d\n", SIGUSR2);
+		}
 		usleep(500);
 		i++;
 	}
