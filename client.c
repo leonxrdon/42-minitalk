@@ -13,7 +13,8 @@
 #include <signal.h>
 #include <limits.h>
 #include <unistd.h>
-/* Atoi: para validar si el PID es un numero */
+#include <stdlib.h>
+
 int	ft_atoi(const char *str)
 {
 	int				i;
@@ -43,37 +44,47 @@ int	ft_atoi(const char *str)
 	return (res * signo);
 }
 
-/* Transformar de Caracter a Binario */
-void	char_to_bin(int pid, char c)
+void	confirm(int sig)
 {
-	int	i;
+	if (sig == SIGUSR2)
+		write(1, "[ok] ", 5);
+}
 
-	i = 0;
-	while (i < 8)
+void	send_signals(int pid, char c)
+{
+	int	j;
+
+	j = 0;
+	while (j < 8)
 	{
-		if (c & (1 << i))
+		if (c & (1 << j))
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(500);
-		i++;
+		usleep(100);
+		j++;
 	}
 }
 
 int	main(int argc, char **argv)
 {
-	int	i;
-	int	pid;
+	int					i;
+	int					pid;
+	struct sigaction	saction;
 
+	saction.sa_handler = confirm;
 	i = 0;
 	if (argc == 3)
 	{
 		pid = ft_atoi(argv[1]);
 		while (argv[2][i] != '\0')
 		{
-			char_to_bin(pid, argv[2][i]);
+			signal(SIGUSR1, confirm);
+			signal(SIGUSR2, confirm);
+			send_signals(pid, argv[2][i]);
 			i++;
 		}
+		send_signals(pid, '\n');
 	}
 	return (0);
 }

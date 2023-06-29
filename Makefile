@@ -10,27 +10,25 @@
 #                                                                              #
 # **************************************************************************** #
 
-LIB		= ar rcs
 RM		= rm -f
 CC		= gcc
 CCFLAGS	= -Wextra -Werror -Wall
-NAME	= minitalk.a
+NAME	= client server
 SRC		= client.c server.c
 
-OBJ = $(SRC:.c=.o)
-INCLUDE = minitalk.h
+all: $(NAME)
 
-all : $(NAME)
-$(NAME): $(OBJ) $(INCLUDE)
-	$(LIB) $(NAME) $(OBJ)
+client: client.c
+	$(CC) $(CCFLAGS) -o client client.c
 
-%.o : %.c
-	$(CC) $(CCFLAGS) -c $< -o $@
+server: server.c
+	$(CC) $(CCFLAGS) -o server server.c
 
 clean:
-	$(RM) $(OBJ) $(NAME)
-
-fclean: clean
 	$(RM) $(NAME)
 
+fclean: clean
+
 re: fclean all
+
+.PHONY: all clean fclean re
