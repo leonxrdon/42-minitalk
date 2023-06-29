@@ -10,22 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <signal.h>
+#include <unistd.h>
 
-#include "minitalk.h"
-#include <stdlib.h>
+void	ft_putnbr(int num)
+{
+	if (num > 9)
+		ft_putnbr(num / 10);
+	num = num % 10 + '0';
+	write(1, &num, 1);
+}
 
-void	bin_to_char(int bin)
+void	bin_to_char(int sig)
 {
 	static int	i;
 	static int	bit;
 
-	if(bin == SIGUSR1)
+	if (sig == SIGUSR1)
 		i |= (1 << bit);
 	bit++;
-
-	if(bit == 8)
+	if (bit == 8)
 	{
-		write(1, &i, 1);
+		write (1, &i, 1);
 		bit = 0;
 		i = 0;
 	}
@@ -33,15 +39,12 @@ void	bin_to_char(int bin)
 
 int	main(void)
 {
-	int	pid;
-
-	pid = getpid();
-	printf("\n\tPID: %d\n", pid);
-	printf("---Esperando el mensaje del client---\n");
+	write(1, "PID:", 5);
+	ft_putnbr(getpid());
+	write (1, "\n---Esperando el mensaje del client---\n", 41);
 	signal(SIGUSR1, bin_to_char);
 	signal(SIGUSR2, bin_to_char);
-	printf("\n");
-	while(1)
+	while (1)
 		pause();
 	return (0);
 }

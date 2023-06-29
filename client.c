@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
-
+#include <signal.h>
+#include <limits.h>
+#include <unistd.h>
 /* Atoi: para validar si el PID es un numero */
 int	ft_atoi(const char *str)
 {
@@ -50,21 +51,14 @@ void	char_to_bin(int pid, char c)
 	i = 0;
 	while (i < 8)
 	{
-		if (c & (0x01 << i))
-		{
-            kill(pid, SIGUSR1);
-			printf("SIGUSR1: %d\n", SIGUSR1);
-		}
-        else
-		{
+		if (c & (1 << i))
+			kill(pid, SIGUSR1);
+		else
 			kill(pid, SIGUSR2);
-			printf("SIGUSR2: %d\n", SIGUSR2);
-		}
 		usleep(500);
 		i++;
 	}
 }
-
 
 int	main(int argc, char **argv)
 {
@@ -72,14 +66,14 @@ int	main(int argc, char **argv)
 	int	pid;
 
 	i = 0;
-	if(argc == 3)
+	if (argc == 3)
 	{
 		pid = ft_atoi(argv[1]);
-		while(argv[2][i] != '\0')
+		while (argv[2][i] != '\0')
 		{
 			char_to_bin(pid, argv[2][i]);
 			i++;
 		}
 	}
-	return(0);
+	return (0);
 }
